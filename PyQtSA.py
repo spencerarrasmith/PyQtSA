@@ -274,16 +274,6 @@ class QSATab(QFrame):
     def contextMenuEvent(self, event):
         contextMenu = QMenu()
 
-        action1 = QAction(text="Read All")
-        action1.triggered.connect(self.ReadAll)
-        contextMenu.addAction(action1)
-
-        action2 = QAction(text="Write All")
-        action2.triggered.connect(self.WriteAll)
-        contextMenu.addAction(action2)
-
-        contextMenu.addSeparator()
-
         action3 = QAction(text="Save to File")
         action3.triggered.connect(self.SaveToFile)
         contextMenu.addAction(action3)
@@ -315,23 +305,6 @@ class QSATab(QFrame):
                             for constant in widget.widget.constants:
                                 widgetlist.append(constant)
         return widgetlist
-
-    def ReadAll(self):
-        """Build and send read commands for all widgets on the tab"""
-        readqueue = self.ListAllWidgets()
-
-        for widget in readqueue:
-            self.serial.sendSerial(message=widget.getReadCommand())
-
-    def WriteAll(self):
-        """Build and send write commands for all widgets on the tab"""
-        writequeue = self.ListAllWidgets()
-
-        for widget in writequeue:
-            if isinstance(widget, QSAVariableFrame):
-                if widget.parameter:
-                    if 'W' in widget.parameter.permission:
-                        self.serial.sendSerial(message=widget.getWriteCommand())
 
     def SaveToFile(self):
         """Save all parameter names and values to a csv file"""
@@ -944,6 +917,11 @@ class QSAPushbutton(QSAVariableFrame):
         self.button.setStyleSheet(widgetStyle_QSAPushbutton)
 
         self.layout.addWidget(self.button, 0, 0)
+
+        self.button.clicked.connect(self.onClick)
+
+    def onClick(self):
+        return
 
 
 class QSAToggleButton(QSAPushbutton):
