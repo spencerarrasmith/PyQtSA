@@ -47,7 +47,6 @@ class GUIParameter(object):
     @name.setter
     def name(self, name):
         self._name = name
-        print(self._name)
 
     @name.getter
     def parameter(self):
@@ -61,7 +60,6 @@ class GUIParameter(object):
     @command.setter
     def command(self, command):
         self._command = command
-        print(self._command)
 
     @command.getter
     def command(self):
