@@ -7,11 +7,13 @@ from .widgetStyles import *
 
 import time
 
+
 class QSANullEffect(QGraphicsEffect):
     """A null graphics effect for clearing other effects"""
     def __init__(self, parent):
         super().__init__(parent=parent)
         self.setEnabled(False)
+
 
 class QSADropShadow(QGraphicsDropShadowEffect):
     """A subtle drop shadow for buttons"""
@@ -621,8 +623,8 @@ class QSAEntry(QSAVariableFrame):
         self.units = self.parameter.units
         self.precision = self.parameter.precision
         self.mode = self.parameter.mode
-        self.min = self.parameter.min
-        self.max = self.parameter.max
+        self.value_min = self.parameter.value_min
+        self.value_max = self.parameter.value_max
 
         self.row = row
         self.column = column
@@ -634,8 +636,8 @@ class QSAEntry(QSAVariableFrame):
         #self.spinbox_set.setFixedWidth(80)
         self.parameter.variable.bind_to(self.updateValue)
         self.spinbox_set.setButtonSymbols(2)
-        self.spinbox_set.setMinimum(self.min)
-        self.spinbox_set.setMaximum(self.max)
+        self.spinbox_set.setMinimum(self.value_min)
+        self.spinbox_set.setMaximum(self.value_max)
         self.spinbox_set.setDecimals(self.precision)
         self.spinbox_set.setSingleStep(10**-self.precision)     # Step size is the smallest visible decimal digit
         self.spinbox_set.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -942,8 +944,10 @@ class QSAToggleButton(QSAPushbutton):
         self.state.value = 0
 
         self.index = index
-        self.command = self.parameter.command
-        self.parameter.variable.bind_to(lambda val: self.updateValue(val))
+
+        if self.parameter is not None:
+            self.command = self.parameter.command
+            self.parameter.variable.bind_to(lambda val: self.updateValue(val))
 
         self.button.clicked.connect(lambda: self.updateValue(1-self.state.value))
         self.button.setToolTip(self.description)
